@@ -9,6 +9,13 @@ mod db;
 
 type DbPool = r2d2::Pool<ConnectionManager<SqliteConnection>>;
 
+pub fn config(cfg: &mut web::ServiceConfig) {
+    cfg.service(servers)
+        .service(add_server)
+        .service(delete_server)
+        .service(get_server);
+}
+
 #[get("/server")]
 pub async fn servers(pool: web::Data<DbPool>) -> Result<HttpResponse, Error> {
     let servers = web::block(move || {

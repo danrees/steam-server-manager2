@@ -4,7 +4,7 @@ use diesel::{
     r2d2::{self, ConnectionManager},
     SqliteConnection,
 };
-use steam_server_manager2::{add_server, delete_server, get_server, servers};
+use steam_server_manager2::config;
 
 mod db;
 
@@ -21,10 +21,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(pool.clone()))
-            .service(servers)
-            .service(add_server)
-            .service(get_server)
-            .service(delete_server)
+            .configure(config)
     })
     .bind(("0.0.0.0", 8000))?
     .run()
